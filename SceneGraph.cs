@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Diagnostics;
+﻿using System.Linq;
+
 using OpenTK;
 
 namespace Template_P3
@@ -11,28 +7,19 @@ namespace Template_P3
     public class SceneGraph
     {
         Node root;
-        Stopwatch timer;                        // timer for measuring frame duration
-        float a = 0;                            // world rotation angle
+
+
                           
         RenderTarget target;                    // intermediate render target
         ScreenQuad quad;                        // screen filling quad for post processing
         bool useRenderTarget = false;           //ZET OP TRUE VOOR POST-PROCESSING
-        const float PI = 3.1415926535f;			// PI
+
         Game game;
-        Matrix4 Tworld, Tcam, TcamPerspective;
+     
 
         public SceneGraph(Game game)
         {
             this.game = game;
-            // initialize stopwatch
-            timer = new Stopwatch();
-            timer.Reset();
-            timer.Start();
-           
-            Tcam = Matrix4.CreateTranslation(0, 4, 15);
-            TcamPerspective = Matrix4.CreatePerspectiveFieldOfView(1.2f, 1.3f, .1f, 1000);
-
-            
             // create the render target
             target = new RenderTarget(game.screen.width, game.screen.height);
             quad = new ScreenQuad();
@@ -41,17 +28,7 @@ namespace Template_P3
 
         public void RenderSceneGraph()
         {
-
-            // measure frame duration
-            float frameDuration = timer.ElapsedMilliseconds;
-            timer.Reset();
-            timer.Start();
-
-            // update rotation
-            a += 0.001f * frameDuration;
-            if (a > 2 * PI) a -= 2 * PI;
-            Tworld = Matrix4.CreateFromAxisAngle(new Vector3(0, 1, 0), a);
-            Matrix4 transform = Tworld * Tcam.Inverted() * TcamPerspective;
+            Matrix4 transform = game.TWorld * game.TCamera.Inverted() * game.TCamPerspective;
 
             if (useRenderTarget)
             {
@@ -66,7 +43,6 @@ namespace Template_P3
             else
             {
                 // render scene directly to the screen
-
                 TransformNodesToCamera(root, transform * root.Matrix);
             }
         }
@@ -80,7 +56,7 @@ namespace Template_P3
             Matrix4 TransformedMatrix = node.Matrix;
             TransformedMatrix = transformParents * node.Matrix;
 
-            node.NodeMesh.Render(game.shader, TransformedMatrix, Tworld, game.wood);
+            node.NodeMesh.Render(game.shader, TransformedMatrix, game.TWorld, game.wood);
 
             if (node.Children.Any()) //if there exists something within the children list:
             {
