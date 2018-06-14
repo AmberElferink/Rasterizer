@@ -69,7 +69,7 @@ namespace Template_P3
                 // enable render target
                 target.Bind();
                 Matrix4 ToCamera = Tcam.Inverted()*Tworld;
-                Matrix4 transform = Matrix4.CreateFromAxisAngle(new Vector3(0, 1, 0), 0);
+                Matrix4 transform = Matrix4.CreateFromAxisAngle(new Vector3(0, 1, 0), a);
                 transform *= Matrix4.CreateTranslation(0, -4, -15);
                 transform *= Matrix4.CreatePerspectiveFieldOfView(1.2f, 1.3f, .1f, 1000);
                 //root.NodeMesh.Render(shader, ToCamera*root.Matrix, wood);
