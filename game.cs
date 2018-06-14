@@ -33,11 +33,9 @@ public class Game
     {
             floor = new Mesh("../../assets/floor.obj");
 
-            //Matrix4 transform = Matrix4.CreateFromAxisAngle(new Vector3(0, 1, 0), 0);
-            //transform *= Matrix4.CreateTranslation(0, -4, -15);
-            Matrix4 transform = Matrix4.CreatePerspectiveFieldOfView(1.2f, 1.3f, .1f, 1000);
 
-            Node floorNode = new Node("floor", null, floor, transform, sceneGraph);
+
+            Node floorNode = new Node("floor", null, floor, Matrix4.Identity, sceneGraph);
             // load teapot
             teapot = new Mesh("../../assets/teapot.obj");
             Node teapotNode = new Node("teapot", floorNode, teapot, Matrix4.CreateTranslation(0, 0.5f, -0.5f), sceneGraph);

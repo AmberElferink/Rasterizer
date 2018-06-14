@@ -69,8 +69,11 @@ namespace Template_P3
                 // enable render target
                 target.Bind();
                 Matrix4 ToCamera = Tcam.Inverted()*Tworld;
+                Matrix4 transform = Matrix4.CreateFromAxisAngle(new Vector3(0, 1, 0), 0);
+                transform *= Matrix4.CreateTranslation(0, -4, -15);
+                transform *= Matrix4.CreatePerspectiveFieldOfView(1.2f, 1.3f, .1f, 1000);
                 //root.NodeMesh.Render(shader, ToCamera*root.Matrix, wood);
-                TransformNodesToCamera(root, ToCamera*root.Matrix);
+                TransformNodesToCamera(root, transform*root.Matrix);
 
                 // render quad
                 target.Unbind();
@@ -88,10 +91,8 @@ namespace Template_P3
         void TransformNodesToCamera(Node node, Matrix4 transformParents)
         {
             Matrix4 TransformedMatrix = node.Matrix;
-            if (node.Parent != null)
-            {
-                TransformedMatrix = node.Parent.Matrix * node.Matrix;
-            }
+            TransformedMatrix = transformParents * node.Matrix;
+
             node.NodeMesh.Render(shader, TransformedMatrix, wood);
 
             if (node.Children.Any()) //if there exists something within the children list:
