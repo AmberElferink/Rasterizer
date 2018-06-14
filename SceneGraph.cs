@@ -12,7 +12,7 @@ namespace Template_P3
     {
         Node root;
         Stopwatch timer;                        // timer for measuring frame duration
-        float a = 0;                            // teapot rotation angle
+        float a = 0;                            // world rotation angle
         Shader shader;                          // shader to use for rendering
         Shader postproc;                        // shader to use for post processing
         Texture wood;                           // texture to use for rendering
@@ -21,8 +21,7 @@ namespace Template_P3
         bool useRenderTarget = true;
         const float PI = 3.1415926535f;			// PI
         Game game;
-        Matrix4 Tworld;
-        Matrix4 Tcam;
+        Matrix4 Tworld, Tcam, TcamPerspective;
 
         public SceneGraph(Game game)
         {
@@ -31,9 +30,9 @@ namespace Template_P3
             timer = new Stopwatch();
             timer.Reset();
             timer.Start();
-            Tworld = Matrix4.Identity;
+           
             Tcam = Matrix4.CreateTranslation(0, 4, 15);
-
+            TcamPerspective = Matrix4.CreatePerspectiveFieldOfView(1.2f, 1.3f, .1f, 1000);
 
             // create shaders
             shader = new Shader("../../shaders/vs.glsl", "../../shaders/fs.glsl");
@@ -48,31 +47,24 @@ namespace Template_P3
 
         public void RenderSceneGraph()
         {
-            // prepare matrix for vertex shader
-            /*Matrix4 transform = Matrix4.CreateFromAxisAngle( new Vector3( 0, 1, 0 ), a );
-            transform *= Matrix4.CreateTranslation( 0, -4, -15 );
-            transform *= Matrix4.CreatePerspectiveFieldOfView( 1.2f, 1.3f, .1f, 1000 );*/
 
             // measure frame duration
             float frameDuration = timer.ElapsedMilliseconds;
             timer.Reset();
             timer.Start();
 
-           
-
             // update rotation
             a += 0.001f * frameDuration;
             if (a > 2 * PI) a -= 2 * PI;
+            Tworld = Matrix4.CreateFromAxisAngle(new Vector3(0, 1, 0), a);
 
             if (useRenderTarget)
             {
                 // enable render target
                 target.Bind();
-                Matrix4 transform = Matrix4.CreateFromAxisAngle(new Vector3(0, 1, 0), a); //tworld
-                transform *= Matrix4.CreateTranslation(0, -4, -15); //tcamera translation
-                transform *= Matrix4.CreatePerspectiveFieldOfView(1.2f, 1.3f, .1f, 1000);//tcamera warp
-               
-                TransformNodesToCamera(root, transform*root.Matrix);
+
+                Matrix4 transform = Tworld * Tcam.Inverted() * TcamPerspective; 
+                TransformNodesToCamera(root, transform * root.Matrix);
 
                 // render quad
                 target.Unbind();
@@ -87,6 +79,10 @@ namespace Template_P3
             }
         }
 
+        /// <summary>
+        /// Will loop through the scenegraph, from the root to the leaves. It will Render each node with orientation with respect to the parents above it.
+        /// </summary>
+        /// <param name="transformParents">the multiplied transformation matrices from all parent above the current node</param>
         void TransformNodesToCamera(Node node, Matrix4 transformParents)
         {
             Matrix4 TransformedMatrix = node.Matrix;
