@@ -30,8 +30,10 @@ void main()
 	float attenuation = 1.0f / (dist* dist);
 
 	float alfa = 0.3f;
-
+	
 	vec3 Rv = L;
+	//to do: implementatie van "bijna Rv = L" gevallen.
+
 
 	outputColor = vec4( ambientColor + diffuseColor * max( 0.0f, dot( L, normal.xyz) ) * attenuation * lightColor + 
 		specularColor * pow(max( 0.0f, dot( L, Rv) ), alfa) * attenuation * specLightColor, 1 );
