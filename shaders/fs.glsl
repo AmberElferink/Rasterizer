@@ -1,11 +1,20 @@
 ﻿#version 330
+// shader input
 in vec2 uv;                 // interpolated texture coordinates
 in vec4 normal;             // interpolated normal, world space
 in vec4 worldPos;           // world space position of fragment
-uniform sampler2D pixels;   // texture sampler
-out vec4 outputColor;       // shaderoutput
-uniform vec3 lightPos;      // light position in world space
-void main()                 // fragment shader
+
+//shader output
+out vec4 outputColor;       
+
+// texture sampler
+uniform sampler2D pixels;   
+
+// light position in world space
+uniform vec3 lightPos;      
+
+// fragment shader
+void main()             
 {
 	vec3 L = lightPos - worldPos.xyz;
 	float dist = L.length();

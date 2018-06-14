@@ -16,7 +16,7 @@ namespace Template_P3
                           
         RenderTarget target;                    // intermediate render target
         ScreenQuad quad;                        // screen filling quad for post processing
-        bool useRenderTarget = true;
+        bool useRenderTarget = false;           //ZET OP TRUE VOOR POST-PROCESSING
         const float PI = 3.1415926535f;			// PI
         Game game;
         Matrix4 Tworld, Tcam, TcamPerspective;
