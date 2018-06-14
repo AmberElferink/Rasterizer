@@ -13,9 +13,7 @@ namespace Template_P3
         Node root;
         Stopwatch timer;                        // timer for measuring frame duration
         float a = 0;                            // world rotation angle
-        Shader shader;                          // shader to use for rendering
-        Shader postproc;                        // shader to use for post processing
-        Texture wood;                           // texture to use for rendering
+                          
         RenderTarget target;                    // intermediate render target
         ScreenQuad quad;                        // screen filling quad for post processing
         bool useRenderTarget = true;
@@ -34,11 +32,7 @@ namespace Template_P3
             Tcam = Matrix4.CreateTranslation(0, 4, 15);
             TcamPerspective = Matrix4.CreatePerspectiveFieldOfView(1.2f, 1.3f, .1f, 1000);
 
-            // create shaders
-            shader = new Shader("../../shaders/vs.glsl", "../../shaders/fs.glsl");
-            postproc = new Shader("../../shaders/vs_post.glsl", "../../shaders/fs_post.glsl");
-            // load a texture
-            wood = new Texture("../../assets/wood.jpg");
+            
             // create the render target
             target = new RenderTarget(game.screen.width, game.screen.height);
             quad = new ScreenQuad();
@@ -57,25 +51,23 @@ namespace Template_P3
             a += 0.001f * frameDuration;
             if (a > 2 * PI) a -= 2 * PI;
             Tworld = Matrix4.CreateFromAxisAngle(new Vector3(0, 1, 0), a);
+            Matrix4 transform = Tworld * Tcam.Inverted() * TcamPerspective;
 
             if (useRenderTarget)
             {
                 // enable render target
                 target.Bind();
-
-                Matrix4 transform = Tworld * Tcam.Inverted() * TcamPerspective; 
                 TransformNodesToCamera(root, transform * root.Matrix);
 
                 // render quad
                 target.Unbind();
-                quad.Render(postproc, target.GetTextureID());
+                quad.Render(game.postproc, target.GetTextureID());
             }
             else
             {
                 // render scene directly to the screen
-                root.NodeMesh.Render(shader, root.Matrix, wood);
 
-                TransformNodesToCamera(root, Tworld);
+                TransformNodesToCamera(root, transform * root.Matrix);
             }
         }
 
@@ -88,7 +80,7 @@ namespace Template_P3
             Matrix4 TransformedMatrix = node.Matrix;
             TransformedMatrix = transformParents * node.Matrix;
 
-            node.NodeMesh.Render(shader, TransformedMatrix, wood);
+            node.NodeMesh.Render(game.shader, TransformedMatrix, Tworld, game.wood);
 
             if (node.Children.Any()) //if there exists something within the children list:
             {
