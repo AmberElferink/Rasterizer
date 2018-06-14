@@ -53,7 +53,10 @@ namespace Template_P3
             get { return nodeMesh; }
         }
 
-        
+        public Node Parent
+        {
+            get { return parent; }
+        }
 
         public string ID
         {

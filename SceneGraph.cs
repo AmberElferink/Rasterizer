@@ -68,9 +68,9 @@ namespace Template_P3
             {
                 // enable render target
                 target.Bind();
-
-                root.NodeMesh.Render(shader, root.Matrix, wood);
-                TransformNodesToCamera(root, Tworld);
+                Matrix4 ToCamera = Tcam.Inverted()*Tworld;
+                //root.NodeMesh.Render(shader, ToCamera*root.Matrix, wood);
+                TransformNodesToCamera(root, ToCamera*root.Matrix);
 
                 // render quad
                 target.Unbind();
@@ -85,13 +85,18 @@ namespace Template_P3
             }
         }
 
-        void TransformNodesToCamera(Node parentnode, Matrix4 transformParents)
+        void TransformNodesToCamera(Node node, Matrix4 transformParents)
         {
-            foreach (Node childnode in parentnode.Children)
+            Matrix4 TransformedMatrix = node.Matrix;
+            if (node.Parent != null)
             {
-                Matrix4 TransformedMatrix = Matrix4.Mult(parentnode.Matrix, childnode.Matrix);
-                childnode.NodeMesh.Render(shader, TransformedMatrix, wood);
-                if(!childnode.Children.Any()) //if there exists something within the children list:
+                TransformedMatrix = node.Parent.Matrix * node.Matrix;
+            }
+            node.NodeMesh.Render(shader, TransformedMatrix, wood);
+
+            if (node.Children.Any()) //if there exists something within the children list:
+            {
+                foreach (Node childnode in node.Children)
                 {
                     TransformNodesToCamera(childnode, TransformedMatrix);
                 }
