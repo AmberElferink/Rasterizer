@@ -40,7 +40,7 @@ public class Game
             Node floorNode = new Node("floor", null, floor, transform, sceneGraph);
             // load teapot
             teapot = new Mesh("../../assets/teapot.obj");
-            Node teapotNode = new Node("teapot", floorNode, teapot, transform, sceneGraph);
+            Node teapotNode = new Node("teapot", floorNode, teapot, Matrix4.CreateTranslation(0, 1, 0), sceneGraph);
 
 
     }

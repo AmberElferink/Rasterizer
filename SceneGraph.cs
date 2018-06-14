@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using OpenTK;
 
 namespace Template_P3
 {
@@ -20,6 +21,8 @@ namespace Template_P3
         bool useRenderTarget = true;
         const float PI = 3.1415926535f;			// PI
         Game game;
+        Matrix4 Tworld;
+        Matrix4 Tcam;
 
         public SceneGraph(Game game)
         {
@@ -28,6 +31,9 @@ namespace Template_P3
             timer = new Stopwatch();
             timer.Reset();
             timer.Start();
+            Tworld = Matrix4.Identity;
+            Tcam = Matrix4.CreateTranslation(0, 4, 15);
+
 
             // create shaders
             shader = new Shader("../../shaders/vs.glsl", "../../shaders/fs.glsl");
@@ -52,7 +58,7 @@ namespace Template_P3
             timer.Reset();
             timer.Start();
 
-
+           
 
             // update rotation
             a += 0.001f * frameDuration;
@@ -64,11 +70,7 @@ namespace Template_P3
                 target.Bind();
 
                 root.NodeMesh.Render(shader, root.Matrix, wood);
-
-                foreach(Node node in root.Children)
-                {
-                    node.NodeMesh.Render(shader, node.Matrix, wood);
-                }
+                TransformNodesToCamera(root, Tworld);
 
                 // render quad
                 target.Unbind();
@@ -79,13 +81,22 @@ namespace Template_P3
                 // render scene directly to the screen
                 root.NodeMesh.Render(shader, root.Matrix, wood);
 
-                foreach (Node node in root.Children)
-                {
-                    node.NodeMesh.Render(shader, node.Matrix, wood);
-                }
+                TransformNodesToCamera(root, Tworld);
             }
         }
 
+        void TransformNodesToCamera(Node parentnode, Matrix4 transformParents)
+        {
+            foreach (Node childnode in parentnode.Children)
+            {
+                Matrix4 TransformedMatrix = Matrix4.Mult(parentnode.Matrix, childnode.Matrix);
+                childnode.NodeMesh.Render(shader, TransformedMatrix, wood);
+                if(!childnode.Children.Any()) //if there exists something within the children list:
+                {
+                    TransformNodesToCamera(childnode, TransformedMatrix);
+                }
+            }
+        }
 
         public Node Root
         {
