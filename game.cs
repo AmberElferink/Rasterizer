@@ -19,9 +19,9 @@ namespace Template_P3
 
         
 
-        Mesh sun, earth, floor;                     // a mesh to draw using OpenGL
-        Node sunNode, earthNode, floorNode;         //the corresponding Nodes
-        public Texture sunTexture, earthTexture, wood;          // texture to use for rendering
+        Mesh sun, earth, moon, floor, earthpot;                     // a mesh to draw using OpenGL
+        Node sunNode, earthNode, moonNode, floorNode, earthpotnode;         //the corresponding Nodes
+        public Texture sunTexture, earthTexture, moonTexture, wood, earthpottexture;          // texture to use for rendering
         SceneGraph sceneGraph;
         Matrix4 Tworld, Tcam, TcamPerspective;
         const float PI = 3.1415926535f;			// PI
@@ -33,8 +33,6 @@ namespace Template_P3
         int prevMouseY = 0;
         int prevMouseX = 0;
 
-        float Yteapot;
-        bool Upwards;
 
 
 
@@ -63,8 +61,6 @@ namespace Template_P3
             //GL.Uniform3(lightID, 0.0f, 10.0f, 0.0f); //coordinates of light
             GL.Uniform3(lightID, 15.0f, 10.0f, 2.0f);
 
-
-            Upwards = true;
             sceneGraph = new SceneGraph(this);
             LoadMeshes();
         }
@@ -80,17 +76,26 @@ namespace Template_P3
             // load teapot
 
 
-            /*sunTexture = new Texture("../../assets/Sun/2k_sun.jpg");
-            sun = new Mesh("../../assets/Sun/sun.obj");
-            sunNode = new Node("sun", floorNode, sun, Matrix4.CreateTranslation(0, 0.5f, -0.5f), sunTexture, sceneGraph);*/
+            sunTexture = new Texture("../../assets/Sun/2k_sun.jpg");
+            sun = new Mesh("../../assets/Earth/Earth.obj");
+            sunNode = new Node("sun", floorNode, sun, Matrix4.CreateScale(1.5f, 1.5f, 1.5f), sunTexture, sceneGraph);
 
-            sunTexture = new Texture("../../assets/wood.jpg");
+            /*sunTexture = new Texture("../../assets/wood.jpg");
             sun = new Mesh("../../assets/teapot.obj");
             sunNode = new Node("sun", floorNode, sun, Matrix4.CreateTranslation(-30, 0.5f, -0.5f), sunTexture, sceneGraph);
+            */
+
+            earthpottexture = new Texture("../../assets/Earth/Textures/Earth_Diffuse.jpg");
+            earthpot = new Mesh("../../assets/teapot.obj");
+            earthpotnode = new Node("earthpot", sunNode, earthpot, Matrix4.CreateTranslation(0, 3, 0), earthpottexture, sceneGraph);
 
             earthTexture = new Texture("../../assets/Earth/Textures/Earth_Diffuse.jpg");
             earth = new Mesh("../../assets/Earth/Earth.obj");
-            earthNode = new Node("earth", sunNode, earth, Matrix4.CreateTranslation(0f, 0, 0), earthTexture, sceneGraph);
+            earthNode = new Node("earth", sunNode, earth, Matrix4.CreateTranslation(-220f, 0, 0), earthTexture, sceneGraph);
+
+            moonTexture = new Texture("../../assets/Moon/Textures/2k_moon.jpg");
+            moon = new Mesh("../../assets/Earth/Earth.obj");
+            moonNode = new Node("earth", earthNode, earth, Matrix4.CreateTranslation(-120f, 0, 0) * Matrix4.CreateScale(0.5f, 0.5f, 0.5f), moonTexture, sceneGraph);
 
         }
 
@@ -115,7 +120,7 @@ namespace Template_P3
             if (a > 2 * PI) a -= 2 * PI;
             Tworld = Matrix4.CreateFromAxisAngle(new Vector3(0, 1, 0), a);
 
-            earthNode.Matrix = Matrix4.Identity;
+            //earthNode.Matrix = Matrix4.Identity;
         }
 
         void HandleInput()
