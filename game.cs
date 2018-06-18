@@ -16,11 +16,12 @@ namespace Template_P3
         public Surface screen;                  // background surface for printing etc.
         public Shader shader;                   // shader to use for rendering
         public Shader postproc;                 // shader to use for post processing
-        public Texture wood;                    // texture to use for rendering
+
         
 
-        Mesh teapot, floor;                     // a mesh to draw using OpenGL
-        Node teapotNode, floorNode;             //the corresponding Nodes
+        Mesh sun, earth, floor;                     // a mesh to draw using OpenGL
+        Node sunNode, earthNode, floorNode;         //the corresponding Nodes
+        public Texture sunTexture, earthTexture, wood;          // texture to use for rendering
         SceneGraph sceneGraph;
         Matrix4 Tworld, Tcam, TcamPerspective;
         const float PI = 3.1415926535f;			// PI
@@ -54,8 +55,7 @@ namespace Template_P3
             // create shaders
             shader = new Shader("../../shaders/vs.glsl", "../../shaders/fs.glsl");
             postproc = new Shader("../../shaders/vs_post.glsl", "../../shaders/fs_post.glsl");
-            // load a texture
-            wood = new Texture("../../assets/wood.jpg");
+
 
             // set the light
             int lightID = GL.GetUniformLocation(shader.programID, "lightPos");
@@ -73,11 +73,25 @@ namespace Template_P3
 
         void LoadMeshes()
         {
+            // load a texture
+            wood = new Texture("../../assets/wood.jpg");
             floor = new Mesh("../../assets/floor.obj");
-            floorNode = new Node("floor", null, floor, Matrix4.Identity, sceneGraph);
+            floorNode = new Node("floor", null, floor, Matrix4.Identity, wood, sceneGraph);
             // load teapot
-            teapot = new Mesh("../../assets/teapot.obj");
-            teapotNode = new Node("teapot", floorNode, teapot, Matrix4.CreateTranslation(0, 0.5f, -0.5f), sceneGraph);
+
+
+            /*sunTexture = new Texture("../../assets/Sun/2k_sun.jpg");
+            sun = new Mesh("../../assets/Sun/sun.obj");
+            sunNode = new Node("sun", floorNode, sun, Matrix4.CreateTranslation(0, 0.5f, -0.5f), sunTexture, sceneGraph);*/
+
+            sunTexture = new Texture("../../assets/wood.jpg");
+            sun = new Mesh("../../assets/teapot.obj");
+            sunNode = new Node("sun", floorNode, sun, Matrix4.CreateTranslation(-30, 0.5f, -0.5f), sunTexture, sceneGraph);
+
+            earthTexture = new Texture("../../assets/Earth/Textures/Earth_Diffuse.jpg");
+            earth = new Mesh("../../assets/Earth/Earth.obj");
+            earthNode = new Node("earth", sunNode, earth, Matrix4.CreateTranslation(0f, 0, 0), earthTexture, sceneGraph);
+
         }
 
 
@@ -91,17 +105,6 @@ namespace Template_P3
             screen.Clear(0);
             //screen.Print("hello world", 2, 2, 0xffff00);
 
-            //increase and decrease the Ypos of the teapot to create a bounce effect
-            if (Yteapot > 1)
-                Upwards = false;
-            if (Yteapot < 0)
-                Upwards = true;
-
-            if (Upwards)
-                Yteapot += 0.01f;
-            else
-                Yteapot -= 0.01f;
-
 
             // measure frame duration
             float frameDuration = timer.ElapsedMilliseconds;
@@ -112,7 +115,7 @@ namespace Template_P3
             if (a > 2 * PI) a -= 2 * PI;
             Tworld = Matrix4.CreateFromAxisAngle(new Vector3(0, 1, 0), a);
 
-            teapotNode.Matrix = Matrix4.CreateTranslation(0, Yteapot, -0.5f);
+            earthNode.Matrix = Matrix4.Identity;
         }
 
         void HandleInput()
