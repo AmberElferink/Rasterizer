@@ -47,6 +47,7 @@ public class OpenTKApp : GameWindow
 		KeyboardState keyboard = OpenTK.Input.Keyboard.GetState();
 		if (keyboard[OpenTK.Input.Key.Escape]) this.Exit();
         else    game.Keyboard = keyboard;
+
 	}
 	protected override void OnRenderFrame( FrameEventArgs e )
 	{

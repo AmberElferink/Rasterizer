@@ -2,6 +2,7 @@
 using OpenTK.Graphics.OpenGL;
 using System.Diagnostics;
 using OpenTK.Input;
+using System;
 
 // minimal OpenTK rendering framework for UU/INFOGR
 // Jacco Bikker, 2016
@@ -16,7 +17,7 @@ namespace Template_P3
         public Shader shader;                   // shader to use for rendering
         public Shader postproc;                 // shader to use for post processing
         public Texture wood;                    // texture to use for rendering
-
+        
 
         Mesh teapot, floor;                     // a mesh to draw using OpenGL
         Node teapotNode, floorNode;             //the corresponding Nodes
@@ -26,6 +27,10 @@ namespace Template_P3
         float a = 0;                            // world rotation angle
         Stopwatch timer;                        // timer for measuring frame duration
         KeyboardState keyboardstate;
+        MouseState mousestate;
+
+        int prevMouseY = 0;
+        int prevMouseX = 0;
 
         float Yteapot;
         bool Upwards;
@@ -80,8 +85,7 @@ namespace Template_P3
 
         // tick for background surface
         public void Tick()
-        { 
-
+        {
             HandleInput();
 
             screen.Clear(0);
@@ -153,11 +157,37 @@ namespace Template_P3
             {
                 TCamera = Matrix4.CreateRotationY(-0.01f) * TCamera;
             }
+
+            CameraActionMouse();
+
         }
 
 
-        // tick for OpenGL rendering code
-        public void RenderGL()
+        //provides cameraMovement
+        public void CameraActionMouse()
+        {
+
+            MouseState mousestate = OpenTK.Input.Mouse.GetState();
+
+            int currMouseX = mousestate.X;
+            int currMouseY = mousestate.Y;
+
+            int mouseDiffX = currMouseX - prevMouseX;
+            int mouseDiffY = currMouseY - prevMouseY;
+
+            Console.WriteLine(mouseDiffX + " " + mouseDiffY);
+
+            prevMouseX = currMouseX;
+            prevMouseY= currMouseY;
+
+            TCamera = Matrix4.CreateRotationY(-mouseDiffX * 0.007f) * TCamera;
+            TCamera = Matrix4.CreateRotationX(-mouseDiffY * 0.007f) * TCamera;
+
+        }
+    
+
+    // tick for OpenGL rendering code
+    public void RenderGL()
         {
             sceneGraph.RenderSceneGraph();
         }
@@ -183,7 +213,13 @@ namespace Template_P3
             get { return keyboardstate; }
             set { keyboardstate = value; }
         }
-        
+
+        public MouseState Mouse
+        {
+            get { return mousestate; }
+            set { mousestate = value; }
+        }
+
     }
 
 } // namespace Template_P3
