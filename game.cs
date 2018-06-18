@@ -31,8 +31,6 @@ namespace Template_P3
 
 
 
-
-
         // initialize
         public void Init()
         {
@@ -55,8 +53,13 @@ namespace Template_P3
             int lightID = GL.GetUniformLocation(shader.programID, "lightPos");
             GL.UseProgram(shader.programID);
             //GL.Uniform3(lightID, 0.0f, 10.0f, 0.0f); //coordinates of light
-            GL.Uniform3(lightID, 15.0f, 10.0f, 2.0f);
+            GL.Uniform3(lightID, 7.0f, 10.0f, 2.0f);
 
+            // set the ambient color
+            int ambientID = GL.GetUniformLocation(shader.programID, "ambientColor");
+            GL.UseProgram(shader.programID);
+            //GL.Uniform3(ambientID, 1, 0.1f, 0.1f); // ambient color
+            GL.Uniform3(ambientID, 0.5f, 0.05f, 0.05f);         
 
             Upwards = true;
             sceneGraph = new SceneGraph(this);

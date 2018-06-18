@@ -11,7 +11,10 @@ out vec4 outputColor;
 uniform sampler2D pixels;   
 
 // light position in world space
-uniform vec3 lightPos;      
+uniform vec3 lightPos;    
+
+// ambient light color
+uniform vec3 ambientColor;
 
 // fragment shader
 void main()             
@@ -20,16 +23,14 @@ void main()
 	float dist = L.length();
 	L = normalize( L );
 	vec3 lightColor = vec3( 10, 10, 8 );
-	//vec3 lightColor = vec3( 7, 7, 5 );
 	//vec3 specLightColor = vec3( 2, 2, 2);
 	vec3 specLightColor = vec3( 5, 5, 5);
 
 	//vec3 ambientColor = vec3(1, 0.1f, 0.1f );
-	vec3 ambientColor = vec3(0.5f, 0.05f, 0.05f );
+	//vec3 ambientColor = vec3(0.5f, 0.05f, 0.05f );
 	vec3 materialColor = texture( pixels, uv).xyz;
 	vec3 diffuseColor = materialColor;
 	vec3 specularColor = vec3(1, 1, 1);
-	//vec3 specularColor = vec3(0.5f, 0.5f, 0.5f);
 
 	float attenuation = 1.0f / (dist* dist);
 
@@ -43,4 +44,5 @@ void main()
 
 		// TODO: is het idee niet dat de felle vlek kleiner wordt naarmate alfa groter wordt? Hier lijkt de vlek gewoon te verdwijnen.
 		// TODO: waarom zitten er meerdere lichte plekken op de theepot, terwijl er maar één lichtbron is? (Er is altijd een vlek aan de linkerkant.)
+		// TODO: what is a 'uniform' variable?
 }
