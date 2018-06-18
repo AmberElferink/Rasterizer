@@ -53,7 +53,9 @@ namespace Template_P3
         /// <param name="transformParents">the multiplied transformation matrices from all parent above the current node</param>
         void TransformNodesToCamera(Node node, Matrix4 transformParents)
         {
-            Matrix4 TransformedMatrix = transformParents * node.Matrix;
+            //Matrix4 TransformedMatrix = transformParents * node.Matrix;
+            Matrix4 TransformedMatrix = node.Matrix * transformParents;
+            // TODO: welke volgorde is correct??
 
             node.NodeMesh.Render(game.shader, TransformedMatrix, game.TWorld, game.wood);
 
