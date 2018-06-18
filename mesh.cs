@@ -66,10 +66,10 @@ public class Mesh
 
 		// pass transform to vertex shader
 		GL.UniformMatrix4( shader.uniform_mview, false, ref transform );
-        GL.UniformMatrix4(shader.uniform_2wrld, false, ref toWorld);
+        GL.UniformMatrix4( shader.uniform_2wrld, false, ref toWorld);
 
         // enable position, normal and uv attributes
-        GL.EnableVertexAttribArray( shader.attribute_vpos );
+        GL.EnableVertexAttribArray( shader.attribute_vpos ); 
 		GL.EnableVertexAttribArray( shader.attribute_vnrm );
 		GL.EnableVertexAttribArray( shader.attribute_vuvs );
 

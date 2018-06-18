@@ -66,6 +66,7 @@ namespace Template_P3
             }
         }
 
+
         public Node Root
         {
             get { return root; }

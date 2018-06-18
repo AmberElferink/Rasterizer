@@ -31,7 +31,7 @@ void main()
 
 	float alfa = 0.3f;
 	
-	vec3 Rv = L;
+	vec3 Rv = -L + 2*dot(L, normal.xyz) * normal.xyz;
 	//to do: implementatie van "bijna Rv = L" gevallen.
 
 
