@@ -13,8 +13,11 @@ namespace Template_P3
         Node parent;
         List<Node> children;
         Mesh nodeMesh;
+        
+
         Matrix4 objectMatrix;
         SceneGraph sceneGraph;
+       
         string id;
 
         public Node(string id, Node parent, Mesh nodeObject, Matrix4 positionFromParent, SceneGraph sceneGraph)
@@ -46,6 +49,7 @@ namespace Template_P3
         public Matrix4 Matrix
         {
             get { return objectMatrix; }
+            set { objectMatrix = value; }
         }
 
         public Mesh NodeMesh
@@ -53,10 +57,17 @@ namespace Template_P3
             get { return nodeMesh; }
         }
 
+        public Node Parent
+        {
+            get { return parent; }
+        }
+
         public string ID
         {
             get { return id; }
         }
+
+        
 
     }
 }
