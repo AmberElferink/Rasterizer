@@ -1,6 +1,7 @@
 ﻿using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using System.Diagnostics;
+using OpenTK.Input;
 
 // minimal OpenTK rendering framework for UU/INFOGR
 // Jacco Bikker, 2016
@@ -24,7 +25,7 @@ namespace Template_P3
         const float PI = 3.1415926535f;			// PI
         float a = 0;                            // world rotation angle
         Stopwatch timer;                        // timer for measuring frame duration
-
+        KeyboardState keyboardstate;
 
         float Yteapot;
         bool Upwards;
@@ -79,9 +80,12 @@ namespace Template_P3
 
         // tick for background surface
         public void Tick()
-        {
+        { 
+
+            HandleInput();
+
             screen.Clear(0);
-            screen.Print("hello world", 2, 2, 0xffff00);
+            //screen.Print("hello world", 2, 2, 0xffff00);
 
             //increase and decrease the Ypos of the teapot to create a bounce effect
             if (Yteapot > 1)
@@ -107,7 +111,49 @@ namespace Template_P3
             teapotNode.Matrix = Matrix4.CreateTranslation(0, Yteapot, -0.5f);
         }
 
-
+        void HandleInput()
+        {
+            if (Keyboard[Key.Up])
+            {
+                TCamera = Matrix4.CreateTranslation(0, 0, -0.5f) * TCamera;
+            }
+            else if (Keyboard[Key.Down])
+            {
+                TCamera = Matrix4.CreateTranslation(0, 0, 0.5f) * TCamera;
+            }
+            else if (Keyboard[Key.Left])
+            {
+                TCamera = Matrix4.CreateTranslation(-0.5f, 0, 0) * TCamera;
+            }
+            else if (Keyboard[Key.Right])
+            {
+                TCamera = Matrix4.CreateTranslation(0.5f, 0, -0.5f) * TCamera;
+            }
+            else if (Keyboard[Key.Space])
+            {
+                TCamera = Matrix4.CreateTranslation(0, 0.5f, 0) * TCamera;
+            }
+            else if (Keyboard[Key.LShift] || Keyboard[Key.RShift])
+            {
+                TCamera = Matrix4.CreateTranslation(0, -0.5f, 0) * TCamera;
+            }
+            else if (Keyboard[Key.W])
+            {
+                TCamera = Matrix4.CreateRotationX(0.01f) * TCamera;
+            }
+            else if (Keyboard[Key.S])
+            {
+                TCamera = Matrix4.CreateRotationX(-0.01f) * TCamera;
+            }
+            else if (Keyboard[Key.A])
+            {
+                TCamera = Matrix4.CreateRotationY(0.01f) * TCamera;
+            }
+            else if (Keyboard[Key.D])
+            {
+                TCamera = Matrix4.CreateRotationY(-0.01f) * TCamera;
+            }
+        }
 
 
         // tick for OpenGL rendering code
@@ -119,6 +165,7 @@ namespace Template_P3
         public Matrix4 TCamera
         {
             get {return Tcam; }
+            set { Tcam = value; }
         }
 
         public Matrix4 TWorld
@@ -130,6 +177,13 @@ namespace Template_P3
         {
             get { return TcamPerspective; }
         }
+
+        public KeyboardState Keyboard
+        {
+            get { return keyboardstate; }
+            set { keyboardstate = value; }
+        }
+        
     }
 
 } // namespace Template_P3
