@@ -16,7 +16,6 @@ namespace Template_P3
         public Surface screen;                  // background surface for printing etc.
         public Shader shader;                   // shader to use for rendering
         public Shader postproc;                 // shader to use for post processing
-
         
 
         Mesh sun, earth, moon, floor, earthpot;                     // a mesh to draw using OpenGL
@@ -25,13 +24,17 @@ namespace Template_P3
         SceneGraph sceneGraph;
         Matrix4 Tworld, Tcam, TcamPerspective;
         const float PI = 3.1415926535f;			// PI
-        float a = 0;                            // world rotation angle
+        float a = 0; // world rotation angle
+        float moonorbit = 0; //moon orbit angle
+        float moonrotation = 0; //moon rotation angle
         Stopwatch timer;                        // timer for measuring frame duration
         KeyboardState keyboardstate;
         MouseState mousestate;
 
         int prevMouseY = 0;
         int prevMouseX = 0;
+
+        Matrix4 TcamTranslation;
 
 
 
@@ -47,8 +50,10 @@ namespace Template_P3
             timer.Start();
 
             //set initial basic matrices
-            Tcam = Matrix4.CreateTranslation(0, 4, 15);
+            TcamTranslation = Matrix4.CreateTranslation(0, 4, 15);
+            Tcam = TcamTranslation;
             TcamPerspective = Matrix4.CreatePerspectiveFieldOfView(1.2f, 1.3f, .1f, 1000);
+
 
             // create shaders
             shader = new Shader("../../shaders/vs.glsl", "../../shaders/fs.glsl");
@@ -80,11 +85,6 @@ namespace Template_P3
             sun = new Mesh("../../assets/Earth/Earth.obj");
             sunNode = new Node("sun", floorNode, sun, Matrix4.CreateScale(1.5f, 1.5f, 1.5f), sunTexture, sceneGraph);
 
-            /*sunTexture = new Texture("../../assets/wood.jpg");
-            sun = new Mesh("../../assets/teapot.obj");
-            sunNode = new Node("sun", floorNode, sun, Matrix4.CreateTranslation(-30, 0.5f, -0.5f), sunTexture, sceneGraph);
-            */
-
             earthpottexture = new Texture("../../assets/Earth/Textures/Earth_Diffuse.jpg");
             earthpot = new Mesh("../../assets/teapot.obj");
             earthpotnode = new Node("earthpot", sunNode, earthpot, Matrix4.CreateTranslation(0, 3, 0), earthpottexture, sceneGraph);
@@ -95,7 +95,11 @@ namespace Template_P3
 
             moonTexture = new Texture("../../assets/Moon/Textures/2k_moon.jpg");
             moon = new Mesh("../../assets/Earth/Earth.obj");
-            moonNode = new Node("earth", earthNode, earth, Matrix4.CreateTranslation(-120f, 0, 0) * Matrix4.CreateScale(0.5f, 0.5f, 0.5f), moonTexture, sceneGraph);
+            moonNode = new Node("earth", earthNode, earth, 
+                Matrix4.CreateRotationY(moonrotation) * //rotation around its center
+                Matrix4.CreateTranslation(-120f, 0, 0) * //distance from moon center to the earth center
+                Matrix4.CreateRotationY(moonorbit) * //rotation around the earth
+                Matrix4.CreateScale(0.5f, 0.5f, 0.5f), moonTexture, sceneGraph); //size relative to earth
 
         }
 
@@ -120,34 +124,41 @@ namespace Template_P3
             if (a > 2 * PI) a -= 2 * PI;
             Tworld = Matrix4.CreateFromAxisAngle(new Vector3(0, 1, 0), a);
 
-            //earthNode.Matrix = Matrix4.Identity;
+            moonorbit += 0.003f * frameDuration;
+            if (moonorbit > 2 * PI) moonorbit -= 2 * PI;
+            moonrotation += 0.002f * frameDuration;
+            if (moonrotation > 2 * PI) moonorbit -= 2 * PI;
+            moonNode.Matrix = Matrix4.CreateRotationY(moonrotation) * Matrix4.CreateTranslation(-120f, 0, 0)* Matrix4.CreateRotationY(moonorbit) * Matrix4.CreateScale(0.5f, 0.5f, 0.5f);
+
         }
 
         void HandleInput()
         {
+            CameraActionMouse();
+
             if (Keyboard[Key.Up])
             {
-                TCamera = Matrix4.CreateTranslation(0, 0, -0.5f) * TCamera;
+                TcamTranslation = Matrix4.CreateTranslation(0, 0, -0.5f) * TcamTranslation;
             }
             else if (Keyboard[Key.Down])
             {
-                TCamera = Matrix4.CreateTranslation(0, 0, 0.5f) * TCamera;
+                TcamTranslation = Matrix4.CreateTranslation(0, 0, 0.5f) * TcamTranslation;
             }
             else if (Keyboard[Key.Left])
             {
-                TCamera = Matrix4.CreateTranslation(-0.5f, 0, 0) * TCamera;
+                TcamTranslation = Matrix4.CreateTranslation(0, 0, -0.5f) * TcamTranslation;
             }
             else if (Keyboard[Key.Right])
             {
-                TCamera = Matrix4.CreateTranslation(0.5f, 0, -0.5f) * TCamera;
+                TcamTranslation = Matrix4.CreateTranslation(0, 0, 0.5f) * TcamTranslation;
             }
             else if (Keyboard[Key.Space])
             {
-                TCamera = Matrix4.CreateTranslation(0, 0.5f, 0) * TCamera;
+                TCamera = Matrix4.CreateTranslation(0, 0.5f, 0) * TcamTranslation;
             }
             else if (Keyboard[Key.LShift] || Keyboard[Key.RShift])
             {
-                TCamera = Matrix4.CreateTranslation(0, -0.5f, 0) * TCamera;
+                TCamera = Matrix4.CreateTranslation(0, -0.5f, 0) * TcamTranslation;
             }
             else if (Keyboard[Key.W])
             {
@@ -166,10 +177,15 @@ namespace Template_P3
                 TCamera = Matrix4.CreateRotationY(-0.01f) * TCamera;
             }
 
-            CameraActionMouse();
+
 
         }
 
+
+        Vector3 vprev = new Vector3(0, 0, 0);
+
+        float angleX = 0.0f;
+        float angleY = 0.0f;
 
         //provides cameraMovement
         public void CameraActionMouse()
@@ -188,11 +204,32 @@ namespace Template_P3
             prevMouseX = currMouseX;
             prevMouseY= currMouseY;
 
-            TCamera = Matrix4.CreateRotationY(-mouseDiffX * 0.007f) * TCamera;
-            TCamera = Matrix4.CreateRotationX(-mouseDiffY * 0.007f) * TCamera;
+            float angle1 = mouseDiffY * 0.007f;
+            float angle2 = mouseDiffX * 0.007f;
+
+
+            angleX += angle1;
+            angleY += angle2;
+
+
+            // Vector3 vnew2 = new Vector3((float)Math.Cos(ToRadians(angle1).X,  ((float)Math.Cos(angle2)* vprev.Y), 0);
+            Vector3 vnew2 = new Vector3(
+                (float)Math.Cos(angleX) * (float)Math.Sin(angleY),
+                (float)Math.Sin(angleX) * (float)Math.Sin(angleY), 
+                (float)Math.Cos(angleY));
+            //Vector3 vnew2 = ((float)Math.Cos(angle1)* vprev);
+           // Vector3 vnew2 = new Vector3((float)Math.Cos(angleX), 0, (float)Math.Sin(angleX));
+           TCamera = Matrix4.LookAt(TCamera.Column3.Xyz, TCamera.Column3.Xyz + vnew2, new Vector3(0, 1, 0))*TcamTranslation;
+
+            //TCamera = Matrix4.CreateRotationY(-mouseDiffX * 0.007f) * TCamera;
+            //TCamera = Matrix4.CreateRotationX(-mouseDiffY * 0.007f) * TCamera;
 
         }
     
+        float ToRadians(float angle)
+        {
+            return(PI * (angle - 90) / 180f);
+        }
 
     // tick for OpenGL rendering code
     public void RenderGL()
