@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Threading;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
+using OpenTK.Input;
 
 namespace Template_P3 {
 
@@ -43,8 +44,10 @@ public class OpenTKApp : GameWindow
 	protected override void OnUpdateFrame( FrameEventArgs e )
 	{
 		// called once per frame; app logic
-		var keyboard = OpenTK.Input.Keyboard.GetState();
+		KeyboardState keyboard = OpenTK.Input.Keyboard.GetState();
 		if (keyboard[OpenTK.Input.Key.Escape]) this.Exit();
+        else    game.Keyboard = keyboard;
+
 	}
 	protected override void OnRenderFrame( FrameEventArgs e )
 	{

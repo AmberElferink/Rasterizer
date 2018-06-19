@@ -51,7 +51,8 @@ namespace Template_P3
         void TransformNodesToCamera(Node node, Matrix4 transformParents)
         {
             Matrix4 TransformedMatrix = node.Matrix * transformParents;
-            node.NodeMesh.Render(game.shader, TransformedMatrix, game.TWorld, game.wood);
+
+            node.NodeMesh.Render(game.shader, TransformedMatrix, game.TWorld, node.Texture);
 
             if (node.Children.Any()) // if there exists something within the children list:
             {
