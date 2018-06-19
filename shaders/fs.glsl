@@ -57,4 +57,5 @@ void main()
 			specularColor * pow(max( 0.0f, dot( L, Rv) ), alfa) * attenuation * specLightColor, 1 );
 		// Phong shading
 	}
+
 }
