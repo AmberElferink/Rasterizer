@@ -47,7 +47,7 @@ public class Mesh
 	}
 
 	// render the mesh using the supplied shader and matrix
-	public void Render( Shader shader, Matrix4 transform, Texture texture )
+	public void Render( Shader shader, Matrix4 transform, Matrix4 toWorld, Texture texture )
 	{
 		// on first run, prepare buffers
 		Prepare( shader );
@@ -66,9 +66,10 @@ public class Mesh
 
 		// pass transform to vertex shader
 		GL.UniformMatrix4( shader.uniform_mview, false, ref transform );
+        GL.UniformMatrix4( shader.uniform_2wrld, false, ref toWorld);
 
-		// enable position, normal and uv attributes
-		GL.EnableVertexAttribArray( shader.attribute_vpos );
+        // enable position, normal and uv attributes
+        GL.EnableVertexAttribArray( shader.attribute_vpos ); 
 		GL.EnableVertexAttribArray( shader.attribute_vnrm );
 		GL.EnableVertexAttribArray( shader.attribute_vuvs );
 

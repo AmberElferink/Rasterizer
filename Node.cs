@@ -13,11 +13,14 @@ namespace Template_P3
         Node parent;
         List<Node> children;
         Mesh nodeMesh;
+        Texture texture;
+
         Matrix4 objectMatrix;
         SceneGraph sceneGraph;
+       
         string id;
 
-        public Node(string id, Node parent, Mesh nodeObject, Matrix4 positionFromParent, SceneGraph sceneGraph)
+        public Node(string id, Node parent, Mesh nodeObject, Matrix4 positionFromParent, Texture texture, SceneGraph sceneGraph)
         {
             this.sceneGraph = sceneGraph;
             this.id = id;
@@ -25,6 +28,7 @@ namespace Template_P3
             this.parent = parent;
             this.nodeMesh = nodeObject;
             objectMatrix = positionFromParent;
+            this.texture = texture;
 
             if (parent == null)
             {
@@ -46,6 +50,7 @@ namespace Template_P3
         public Matrix4 Matrix
         {
             get { return objectMatrix; }
+            set { objectMatrix = value; }
         }
 
         public Mesh NodeMesh
@@ -53,9 +58,19 @@ namespace Template_P3
             get { return nodeMesh; }
         }
 
+        public Node Parent
+        {
+            get { return parent; }
+        }
+
         public string ID
         {
             get { return id; }
+        }
+
+        public Texture Texture
+        {
+            get { return texture; }
         }
 
     }
