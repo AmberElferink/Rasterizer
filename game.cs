@@ -62,12 +62,12 @@ namespace Template_P3
             // set the ambient color
             int ambientID = GL.GetUniformLocation(shader.programID, "ambientColor");
             GL.UseProgram(shader.programID);
-            GL.Uniform3(ambientID, 0.5f, 0.05f, 0.05f);
+            GL.Uniform3(ambientID, 0.1f, 0.1f, 0.1f);
 
             // set the lights (positions, colors)
             passLights();
 
-            Upwards = true;
+
             sceneGraph = new SceneGraph(this);
             LoadMeshes();
         }
@@ -201,7 +201,7 @@ namespace Template_P3
 
             TCamera = Matrix4.CreateRotationY(-mouseDiffX * 0.007f) * TCamera;
             TCamera = Matrix4.CreateRotationX(-mouseDiffY * 0.007f) * TCamera;
-
+        }
 
         // pass the lights to the shader
         public void passLights()
@@ -230,7 +230,7 @@ namespace Template_P3
 
             Light light3 = new Light(
                 new Vector3(7.0f, 5.0f, -2.0f), // position
-                new Vector3(5, 5, 8), // color
+                100*new Vector3(7, 5, 8), // color
                 new Vector3(0, 5, 0)); // specular color
             Matrix3 lightMat3 = new Matrix3(light3.lightPos, light3.lightColor, light3.specLightColor);
             lightMat3 = Matrix3.Transpose(lightMat3);
@@ -239,9 +239,9 @@ namespace Template_P3
             GL.UniformMatrix3(lightMat3ID, true, ref lightMat3);
 
             Light light4 = new Light(
-                new Vector3(0, 5.0f, 0.2f), // position
-                new Vector3(8, 9, 10), // color
-                new Vector3(9, 9, 9)); // specular color
+                new Vector3(180, 5.0f, 0.2f), // position
+                new Vector3(8000, 9000, 10000), // color
+                new Vector3(90, 90, 90)); // specular color
             Matrix3 lightMat4 = new Matrix3(light4.lightPos, light4.lightColor, light4.specLightColor);
             lightMat4 = Matrix3.Transpose(lightMat4);
             int lightMat4ID = GL.GetUniformLocation(shader.programID, "light4");
