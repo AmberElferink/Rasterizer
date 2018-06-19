@@ -166,7 +166,7 @@ namespace Template_P3
                 TCamera = Matrix4.CreateRotationY(-0.01f) * TCamera;
             }
 
-            CameraActionMouse();
+            //CameraActionMouse();
 
         }
 
