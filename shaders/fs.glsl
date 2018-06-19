@@ -13,7 +13,7 @@ uniform sampler2D pixels;
 // ambient light color
 uniform vec3 ambientColor;
 
-// lights stored in matrices (position, color, specular color)
+// lights, stored in matrices (position, color, specular color)
 uniform mat3 light1;
 uniform mat3 light2;
 uniform mat3 light3;
@@ -25,7 +25,7 @@ uniform int lightCount;
 // fragment shader
 void main()             
 {
-	outputColor = vec4(ambientColor, 1); // mag maar één keer worden opgeteld (niet in elke loop opnieuw)
+	outputColor = vec4(ambientColor, 1);
 	
 	vec3 vecx = vec3(1,0,0);
 	vec3 vecy = vec3(0,1,0);
@@ -51,16 +51,14 @@ void main()
 
 	float attenuation = 1.0f / (dist* dist);
 
-	float alfa = 1.0f;
-	
-	vec3 Rv = -L + 2*dot(L,normal.xyz)*normal.xyz;
-	Rv = normalize(Rv);
+	float alfa = 1.0f;	
 
+	vec3 Rv = vec3(0,0,0);  
+	if(dot(L,normal.xyz) > 0)
+		Rv = -L + 2*dot(L,normal.xyz)*normal.xyz;
+	// if the normal points away from the light, there is no light at that point
+	 
 	outputColor += vec4(diffuseColor * max( 0.0f, dot( L, normal.xyz) ) * attenuation * lightColor + 
 		specularColor * pow(max( 0.0f, dot( L, Rv) ), alfa) * attenuation * specLightColor, 1 );
 	}
-	
-
-		// TODO: is het idee niet dat de felle vlek kleiner wordt naarmate alfa groter wordt? Hier lijkt de vlek gewoon te verdwijnen.
-		// TODO: waarom zitten er meerdere lichte plekken op de theepot, terwijl er maar één lichtbron is? (Er is altijd een vlek aan de linkerkant.)
 }

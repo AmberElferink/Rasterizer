@@ -62,7 +62,7 @@ namespace Template_P3
             Light light1 = new Light(
                 new Vector3(7.0f, 5.0f, 2.0f), // position
                 new Vector3(10, 10, 8), // color
-                new Vector3(5, 0, 0)); // specular color
+                new Vector3(5, 5, 5)); // specular color
             allLights.Add(light1);
             Matrix3 lightMat1 = new Matrix3(light1.lightPos, light1.lightColor, light1.specLightColor); // store position, color, specular color in matrix
             lightMat1 = Matrix3.Transpose(lightMat1); // now the position is the first column, color second, specular color third
@@ -77,8 +77,8 @@ namespace Template_P3
                 new Vector3(1, 1, 6), // color
                 new Vector3(0, 0, 5)); // specular color
             allLights.Add(light2);
-            Matrix3 lightMat2 = new Matrix3(light2.lightPos, light2.lightColor, light2.specLightColor); // store position, color, specular color in matrix
-            lightMat2 = Matrix3.Transpose(lightMat2); // now the position is the first column, color second, specular color third
+            Matrix3 lightMat2 = new Matrix3(light2.lightPos, light2.lightColor, light2.specLightColor); 
+            lightMat2 = Matrix3.Transpose(lightMat2); 
             int lightMat2ID = GL.GetUniformLocation(shader.programID, "light2");
             GL.UseProgram(shader.programID);
             GL.UniformMatrix3(lightMat2ID, true, ref lightMat2);
@@ -88,8 +88,8 @@ namespace Template_P3
                 new Vector3(0, 0, 0), // color
                 new Vector3(0, 5, 0)); // specular color
             allLights.Add(light3);
-            Matrix3 lightMat3 = new Matrix3(light3.lightPos, light3.lightColor, light3.specLightColor); // store position, color, specular color in matrix
-            lightMat3 = Matrix3.Transpose(lightMat3); // now the position is the first column, color second, specular color third
+            Matrix3 lightMat3 = new Matrix3(light3.lightPos, light3.lightColor, light3.specLightColor); 
+            lightMat3 = Matrix3.Transpose(lightMat3); 
             int lightMat3ID = GL.GetUniformLocation(shader.programID, "light3");
             GL.UseProgram(shader.programID);
             GL.UniformMatrix3(lightMat3ID, true, ref lightMat3);
@@ -99,8 +99,8 @@ namespace Template_P3
                 new Vector3(0, 0, 0), // color
                 new Vector3(0, 0, 0)); // specular color
             allLights.Add(light4);
-            Matrix3 lightMat4 = new Matrix3(light4.lightPos, light4.lightColor, light4.specLightColor); // store position, color, specular color in matrix
-            lightMat4 = Matrix3.Transpose(lightMat4); // now the position is the first column, color second, specular color third
+            Matrix3 lightMat4 = new Matrix3(light4.lightPos, light4.lightColor, light4.specLightColor); 
+            lightMat4 = Matrix3.Transpose(lightMat4); 
             int lightMat4ID = GL.GetUniformLocation(shader.programID, "light4");
             GL.UseProgram(shader.programID);
             GL.UniformMatrix3(lightMat4ID, true, ref lightMat4);
