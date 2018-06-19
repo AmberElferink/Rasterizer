@@ -30,6 +30,8 @@ namespace Template_P3
         float Yteapot;
         bool Upwards;
 
+        //float c = 0; // color increase
+
 
 
         // initialize
@@ -55,64 +57,8 @@ namespace Template_P3
             GL.UseProgram(shader.programID);
             GL.Uniform3(ambientID, 0.5f, 0.05f, 0.05f);
 
-            //--------------NEW----------------------
-            // set the lights
-            List<Light> allLights = new List<Light>();
-
-            Light light1 = new Light(
-                new Vector3(7.0f, 5.0f, 2.0f), // position
-                new Vector3(10, 10, 8), // color
-                new Vector3(5, 5, 5)); // specular color
-            allLights.Add(light1);
-            Matrix3 lightMat1 = new Matrix3(light1.lightPos, light1.lightColor, light1.specLightColor); // store position, color, specular color in matrix
-            lightMat1 = Matrix3.Transpose(lightMat1); // now the position is the first column, color second, specular color third
-            int lightMat1ID = GL.GetUniformLocation(shader.programID, "light1");
-            GL.UseProgram(shader.programID);
-            GL.UniformMatrix3(lightMat1ID, true, ref lightMat1);
-            // TODO: what does the bool transpose do? We now forwarded the matrix in the correct setting, so it must not be transposed again.
-            // It seems to go right (same output as before), but the bool does not make much sense. (Not too important; works)
-
-            Light light2 = new Light(
-                new Vector3(-7.0f, 5.0f, 2.0f), // position
-                new Vector3(1, 1, 6), // color
-                new Vector3(0, 0, 5)); // specular color
-            allLights.Add(light2);
-            Matrix3 lightMat2 = new Matrix3(light2.lightPos, light2.lightColor, light2.specLightColor); 
-            lightMat2 = Matrix3.Transpose(lightMat2); 
-            int lightMat2ID = GL.GetUniformLocation(shader.programID, "light2");
-            GL.UseProgram(shader.programID);
-            GL.UniformMatrix3(lightMat2ID, true, ref lightMat2);
-
-            Light light3 = new Light(
-                new Vector3(7.0f, 5.0f, -2.0f), // position
-                new Vector3(0, 0, 0), // color
-                new Vector3(0, 5, 0)); // specular color
-            allLights.Add(light3);
-            Matrix3 lightMat3 = new Matrix3(light3.lightPos, light3.lightColor, light3.specLightColor); 
-            lightMat3 = Matrix3.Transpose(lightMat3); 
-            int lightMat3ID = GL.GetUniformLocation(shader.programID, "light3");
-            GL.UseProgram(shader.programID);
-            GL.UniformMatrix3(lightMat3ID, true, ref lightMat3);
-
-            Light light4 = new Light(
-                new Vector3(-7.0f, 5.0f, 2.0f), // position
-                new Vector3(0, 0, 0), // color
-                new Vector3(0, 0, 0)); // specular color
-            allLights.Add(light4);
-            Matrix3 lightMat4 = new Matrix3(light4.lightPos, light4.lightColor, light4.specLightColor); 
-            lightMat4 = Matrix3.Transpose(lightMat4); 
-            int lightMat4ID = GL.GetUniformLocation(shader.programID, "light4");
-            GL.UseProgram(shader.programID);
-            GL.UniformMatrix3(lightMat4ID, true, ref lightMat4);
-
-            int lightCountID = GL.GetUniformLocation(shader.programID, "lightCount");
-            GL.UseProgram(shader.programID);
-            GL.Uniform1(lightCountID, allLights.Count);
-
-            // TODO: is there a better ('prettier' or more efficient) way to initialize all these lights and pass them to the shader?
-            // Storing them all in an array or list would be ideal (see also fs.glsl).
-            //------------------------------------
-
+            // set the lights (positions, colors)
+            passLights();
 
             Upwards = true;
             sceneGraph = new SceneGraph(this);
@@ -139,7 +85,7 @@ namespace Template_P3
             screen.Clear(0);
             screen.Print("hello world", 2, 2, 0xffff00);
 
-            //increase and decrease the Ypos of the teapot to create a bounce effect
+            // increase and decrease the Ypos of the teapot to create a bounce effect
             if (Yteapot > 1)
                 Upwards = false;
             if (Yteapot < 0)
@@ -161,6 +107,54 @@ namespace Template_P3
             Tworld = Matrix4.CreateFromAxisAngle(new Vector3(0, 1, 0), a);
 
             teapotNode.Matrix = Matrix4.CreateTranslation(0, Yteapot, -0.5f);
+        }
+
+
+
+        // pass the lights to the shader
+        public void passLights()
+        {
+            Light light1 = new Light(
+                new Vector3(7.0f, 5.0f, 2.0f), // position
+                new Vector3(10, 10, 8), // color
+                new Vector3(5, 5, 5)); // specular color
+            Matrix3 lightMat1 = new Matrix3(light1.lightPos, light1.lightColor, light1.specLightColor); // store position, color, specular color in matrix
+            lightMat1 = Matrix3.Transpose(lightMat1); // now the position is the first column, color second, specular color third
+            int lightMat1ID = GL.GetUniformLocation(shader.programID, "light1");
+            GL.UseProgram(shader.programID);
+            GL.UniformMatrix3(lightMat1ID, true, ref lightMat1);
+            // TODO: what does the bool transpose do? We now forwarded the matrix in the correct setting, so it must not be transposed again.
+            // It seems to go right (same output as before), but the bool does not make much sense. (Not too important; works)
+
+            Light light2 = new Light(
+                new Vector3(-7.0f, 5.0f, 2.0f), // position
+                new Vector3(1, 1, 6), // color
+                new Vector3(0, 0, 5)); // specular color
+            Matrix3 lightMat2 = new Matrix3(light2.lightPos, light2.lightColor, light2.specLightColor);
+            lightMat2 = Matrix3.Transpose(lightMat2);
+            int lightMat2ID = GL.GetUniformLocation(shader.programID, "light2");
+            GL.UseProgram(shader.programID);
+            GL.UniformMatrix3(lightMat2ID, true, ref lightMat2);
+
+            Light light3 = new Light(
+                new Vector3(7.0f, 5.0f, -2.0f), // position
+                new Vector3(5, 5, 8), // color
+                new Vector3(0, 5, 0)); // specular color
+            Matrix3 lightMat3 = new Matrix3(light3.lightPos, light3.lightColor, light3.specLightColor);
+            lightMat3 = Matrix3.Transpose(lightMat3);
+            int lightMat3ID = GL.GetUniformLocation(shader.programID, "light3");
+            GL.UseProgram(shader.programID);
+            GL.UniformMatrix3(lightMat3ID, true, ref lightMat3);
+
+            Light light4 = new Light(
+                new Vector3(0, 5.0f, 0.2f), // position
+                new Vector3(8, 9, 10), // color
+                new Vector3(9, 9, 9)); // specular color
+            Matrix3 lightMat4 = new Matrix3(light4.lightPos, light4.lightColor, light4.specLightColor);
+            lightMat4 = Matrix3.Transpose(lightMat4);
+            int lightMat4ID = GL.GetUniformLocation(shader.programID, "light4");
+            GL.UseProgram(shader.programID);
+            GL.UniformMatrix3(lightMat4ID, true, ref lightMat4);
         }
 
 
