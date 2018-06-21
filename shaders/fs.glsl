@@ -8,7 +8,9 @@ in vec4 worldPos;           // world space position of fragment
 out vec4 outputColor;       
 
 // texture sampler
+uniform sampler2D normalmap;
 uniform sampler2D pixels; 
+
 
 // ambient light color
 uniform vec3 ambientColor;
@@ -53,8 +55,8 @@ void main()
 			Rv = -L + 2*dot(L,normal.xyz)*normal.xyz;
 		// if the normal points away from the light, there is no light at that point
 	 
-		outputColor += vec4(diffuseColor * max( 0.0f, dot( L, normal.xyz) ) * attenuation * lightColor + 
-			specularColor * pow(max( 0.0f, dot( L, Rv) ), alfa) * attenuation * specLightColor, 1 );
+		outputColor = vec4(texture( normalmap, uv).xyz, 1); //+= vec4(diffuseColor * max( 0.0f, dot( L, normal.xyz) ) * attenuation * lightColor + 
+			//specularColor * pow(max( 0.0f, dot( L, Rv) ), alfa) * attenuation * specLightColor, 1 );
 		// Phong shading
 	}
 

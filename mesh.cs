@@ -47,7 +47,7 @@ public class Mesh
 	}
 
 	// render the mesh using the supplied shader and matrix
-	public void Render( Shader shader, Matrix4 transform, Matrix4 toWorld, Texture texture )
+	public void Render( Shader shader, Matrix4 transform, Matrix4 toWorld, Texture texture, Texture normal )
 	{
 		// on first run, prepare buffers
 		Prepare( shader );
@@ -55,14 +55,26 @@ public class Mesh
 		// safety dance
 		GL.PushClientAttrib( ClientAttribMask.ClientVertexArrayBit );
 
-		// enable texture
-		int texLoc = GL.GetUniformLocation( shader.programID, "pixels" );
-		GL.Uniform1( texLoc, 0 );
-		GL.ActiveTexture( TextureUnit.Texture0 );
-		GL.BindTexture( TextureTarget.Texture2D, texture.id );
 
-		// enable shader
-		GL.UseProgram( shader.programID );
+
+        if(normal != null)
+        {
+            // enable texture
+            int normLoc = GL.GetUniformLocation(shader.programID, "normalmap"); //van een 2D texture locatie van variabele
+            GL.Uniform1(normLoc, 1); //texture locatie 1 op de GPU.
+            GL.ActiveTexture(TextureUnit.Texture1);
+
+            GL.BindTexture(TextureTarget.Texture2D, normal.id);
+        }
+
+            // enable texture
+            int texLoc = GL.GetUniformLocation(shader.programID, "pixels");
+            GL.Uniform1(texLoc, 0);
+            GL.ActiveTexture(TextureUnit.Texture0);
+            GL.BindTexture(TextureTarget.Texture2D, texture.id);
+
+            // enable shader
+            GL.UseProgram( shader.programID );
 
 		// pass transform to vertex shader
 		GL.UniformMatrix4( shader.uniform_mview, false, ref transform );

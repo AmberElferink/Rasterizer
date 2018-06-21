@@ -52,7 +52,7 @@ namespace Template_P3
         {
             Matrix4 TransformedMatrix = node.Matrix * transformParents;
 
-            node.NodeMesh.Render(game.shader, TransformedMatrix, game.TWorld, node.Texture);
+            node.NodeMesh.Render(game.shader, TransformedMatrix, game.TWorld, node.Texture, node.Normal);
 
             if (node.Children.Any()) // if there exists something within the children list:
             {

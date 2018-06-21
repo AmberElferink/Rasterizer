@@ -22,6 +22,7 @@ namespace Template_P3
         Mesh sun, earth, moon, floor, earthpot;                     // a mesh to draw using OpenGL
         Node sunNode, earthNode, moonNode, floorNode, earthpotnode;         //the corresponding Nodes
         public Texture sunTexture, earthTexture, moonTexture, wood, earthpottexture;          // texture to use for rendering
+        public Texture earthNormal; //normals
         SceneGraph sceneGraph;
         Matrix4 Tworld, Tcam, TcamPerspective;
         const float PI = 3.1415926535f;			// PI
@@ -79,21 +80,22 @@ namespace Template_P3
             // load a texture
             wood = new Texture("../../assets/wood.jpg");
             floor = new Mesh("../../assets/floor.obj");
-            floorNode = new Node("floor", null, floor, Matrix4.Identity, wood, sceneGraph);
+            floorNode = new Node("floor", null, floor, Matrix4.Identity, wood, null, sceneGraph);
             // load teapot
 
 
             sunTexture = new Texture("../../assets/Sun/2k_sun.jpg");
             sun = new Mesh("../../assets/Earth/Earth.obj");
-            sunNode = new Node("sun", floorNode, sun, Matrix4.CreateScale(1.5f, 1.5f, 1.5f), sunTexture, sceneGraph);
+            sunNode = new Node("sun", floorNode, sun, Matrix4.CreateScale(1.5f, 1.5f, 1.5f), sunTexture, null, sceneGraph);
 
             earthpottexture = new Texture("../../assets/Earth/Textures/Earth_Diffuse.jpg");
             earthpot = new Mesh("../../assets/teapot.obj");
-            earthpotnode = new Node("earthpot", sunNode, earthpot, Matrix4.CreateTranslation(0, 3, 0), earthpottexture, sceneGraph);
+            earthpotnode = new Node("earthpot", sunNode, earthpot, Matrix4.CreateTranslation(0, 3, 0), earthpottexture, earthNormal, sceneGraph);
 
             earthTexture = new Texture("../../assets/Earth/Textures/Earth_Diffuse.jpg");
+            earthNormal = new Texture("../../assets/Earth/Textures/Earth_Normal.jpg");
             earth = new Mesh("../../assets/Earth/Earth.obj");
-            earthNode = new Node("earth", sunNode, earth, Matrix4.CreateTranslation(-220f, 0, 0), earthTexture, sceneGraph);
+            earthNode = new Node("earth", sunNode, earth, Matrix4.CreateTranslation(-220f, 0, 0), earthTexture, earthNormal, sceneGraph);
 
             moonTexture = new Texture("../../assets/Moon/Textures/2k_moon.jpg");
             moon = new Mesh("../../assets/Earth/Earth.obj");
@@ -101,7 +103,8 @@ namespace Template_P3
                 Matrix4.CreateRotationY(moonrotation) * //rotation around its center
                 Matrix4.CreateTranslation(-120f, 0, 0) * //distance from moon center to the earth center
                 Matrix4.CreateRotationY(moonorbit) * //rotation around the earth
-                Matrix4.CreateScale(0.5f, 0.5f, 0.5f), moonTexture, sceneGraph); //size relative to earth
+                Matrix4.CreateScale(0.5f, 0.5f, 0.5f), 
+                moonTexture, null, sceneGraph); //size relative to earth
 
         }
 
