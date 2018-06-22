@@ -8,8 +8,10 @@ in vec4 worldPos;           // world space position of fragment
 out vec4 outputColor;       
 
 // texture sampler
-uniform sampler2D normalmap;
 uniform sampler2D pixels; 
+uniform sampler2D normalmap;
+uniform bool useNormalMap; //eigenlijk een bool of die gebruikt moet worden.
+
 
 
 // ambient light color
@@ -28,6 +30,9 @@ void main()
 
 	vec3 materialColor = texture( pixels, uv).xyz;
 	vec3 diffuseColor = materialColor;
+
+
+
 	vec3 specularColor = vec3(1, 1, 1);
 	
 	vec3 vecx = vec3(1,0,0);
@@ -50,14 +55,34 @@ void main()
 
 		float alfa = 1.0f;	
 
-		vec3 Rv = vec3(0,0,0);  
-		if(dot(L,normal.xyz) > 0)
-			Rv = -L + 2*dot(L,normal.xyz)*normal.xyz;
-		// if the normal points away from the light, there is no light at that point
+		vec3 Rv = vec3(0,0,0);
+		
+			if(useNormalMap)
+			{
+				vec4 normalMapVec = texture( normalmap, uv);
+				if(dot(L,normalMapVec.xyz) > 0)
+				Rv = -L + 2*dot(L,normalMapVec.xyz) * normalMapVec.xyz;
+
+				// if the normal points away from the light, there is no light at that point
 	 
-		outputColor = vec4(texture( normalmap, uv).xyz, 1); //+= vec4(diffuseColor * max( 0.0f, dot( L, normal.xyz) ) * attenuation * lightColor + 
-			//specularColor * pow(max( 0.0f, dot( L, Rv) ), alfa) * attenuation * specLightColor, 1 );
-		// Phong shading
+				outputColor += vec4(diffuseColor * max( 0.0f, dot( L, normalMapVec.xyz) ) * attenuation * lightColor + 
+					specularColor * pow(max( 0.0f, dot( L, Rv) ), alfa) * attenuation * specLightColor, 1 );
+				// Phong shading
+
+			}
+			else
+			{
+				if(dot(L,normal.xyz) > 0)
+				Rv = -L + 2*dot(L,normal.xyz) * normal.xyz;
+
+				// if the normal points away from the light, there is no light at that point
+	 
+				outputColor += vec4(diffuseColor * max( 0.0f, dot( L, normal.xyz) ) * attenuation * lightColor + 
+					specularColor * pow(max( 0.0f, dot( L, Rv) ), alfa) * attenuation * specLightColor, 1 );
+				// Phong shading
+			}
+		
+		
 	}
 
 }

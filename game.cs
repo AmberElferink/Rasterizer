@@ -77,6 +77,8 @@ namespace Template_P3
 
         void LoadMeshes()
         {
+            earthNormal = new Texture("../../assets/Earth/Textures/Earth_Normal.jpg");
+
             // load a texture
             wood = new Texture("../../assets/wood.jpg");
             floor = new Mesh("../../assets/floor.obj");
@@ -93,7 +95,7 @@ namespace Template_P3
             earthpotnode = new Node("earthpot", sunNode, earthpot, Matrix4.CreateTranslation(0, 3, 0), earthpottexture, earthNormal, sceneGraph);
 
             earthTexture = new Texture("../../assets/Earth/Textures/Earth_Diffuse.jpg");
-            earthNormal = new Texture("../../assets/Earth/Textures/Earth_Normal.jpg");
+
             earth = new Mesh("../../assets/Earth/Earth.obj");
             earthNode = new Node("earth", sunNode, earth, Matrix4.CreateTranslation(-220f, 0, 0), earthTexture, earthNormal, sceneGraph);
 
