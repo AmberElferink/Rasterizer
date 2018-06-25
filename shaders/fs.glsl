@@ -22,6 +22,10 @@ uniform mat3 light1;
 uniform mat3 light2;
 uniform mat3 light3;
 uniform mat3 light4;
+uniform mat3 light5;
+uniform mat3 light6;
+uniform mat3 light7;
+uniform mat3 light8;
 
 // fragment shader
 void main()             
@@ -39,9 +43,9 @@ void main()
 	vec3 vecy = vec3(0,1,0);
 	vec3 vecz = vec3(0,0,1);
 
-	mat3 lights[4] = mat3[4](light1, light2, light3, light4);
+	mat3 lights[8] = mat3[8](light1, light2, light3, light4, light5, light6, light7, light8);
 
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 8; i++)
 	{
 		vec3 lightPos = lights[i]*vecx;
 		vec3 lightColor = lights[i]*vecy;
@@ -64,7 +68,8 @@ void main()
 				Rv = -L + 2*dot(L,normalMapVec.xyz) * normalMapVec.xyz;
 
 				// if the normal points away from the light, there is no light at that point
-	 
+				
+				//outputColor = texture( pixels, uv);
 				outputColor += vec4(diffuseColor * max( 0.0f, dot( L, normalMapVec.xyz) ) * attenuation * lightColor + 
 					specularColor * pow(max( 0.0f, dot( L, Rv) ), alfa) * attenuation * specLightColor, 1 );
 				// Phong shading
@@ -76,7 +81,7 @@ void main()
 				Rv = -L + 2*dot(L,normal.xyz) * normal.xyz;
 
 				// if the normal points away from the light, there is no light at that point
-	 
+	 				//outputColor = texture( pixels, uv);
 				outputColor += vec4(diffuseColor * max( 0.0f, dot( L, normal.xyz) ) * attenuation * lightColor + 
 					specularColor * pow(max( 0.0f, dot( L, Rv) ), alfa) * attenuation * specLightColor, 1 );
 				// Phong shading
