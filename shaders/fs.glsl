@@ -11,6 +11,7 @@ out vec4 outputColor;
 uniform sampler2D pixels; 
 uniform sampler2D normalmap;
 uniform bool useNormalMap; //eigenlijk een bool of die gebruikt moet worden.
+uniform bool useShading;
 
 
 
@@ -45,21 +46,23 @@ void main()
 
 	mat3 lights[8] = mat3[8](light1, light2, light3, light4, light5, light6, light7, light8);
 
-	for (int i = 0; i < 8; i++)
+	if(useShading)
 	{
-		vec3 lightPos = lights[i]*vecx;
-		vec3 lightColor = lights[i]*vecy;
-		vec3 specLightColor = lights[i]*vecz;
+		for (int i = 0; i < 8; i++)
+		{
+			vec3 lightPos = lights[i]*vecx;
+			vec3 lightColor = lights[i]*vecy;
+			vec3 specLightColor = lights[i]*vecz;
 	
-		vec3 L = lightPos - worldPos.xyz;
-		float dist = length(L);
-		L = L/dist;
+			vec3 L = lightPos - worldPos.xyz;
+			float dist = length(L);
+			L = L/dist;
 
-		float attenuation = 1.0f / (dist* dist);
+			float attenuation = 1.0f / (dist* dist);
 
-		float alfa = 1.0f;	
+			float alfa = 1.0f;	
 
-		vec3 Rv = vec3(0,0,0);
+			vec3 Rv = vec3(0,0,0);
 		
 			if(useNormalMap)
 			{
@@ -86,8 +89,12 @@ void main()
 					specularColor * pow(max( 0.0f, dot( L, Rv) ), alfa) * attenuation * specLightColor, 1 );
 				// Phong shading
 			}
-		
-		
+		}
+	} //if useShading
+	else
+	{
+		outputColor = texture(pixels, uv);
 	}
+
 
 }

@@ -40,7 +40,17 @@ namespace Template_P3
             else
             {
                 // render scene directly to the screen
-                TransformNodesToCamera(root, transform * root.Matrix);
+                //skybox, so no Tworld, only camera
+                root.NodeMesh.Render(game.shader, game.TCamera.Inverted() * game.TCamPerspective * root.Matrix, game.TCamera.Inverted() * game.TCamPerspective, root.Texture, root.Normal, true); 
+
+                if (root.Children.Any()) // if there exists something within the children list:
+                {
+                    foreach (Node childnode in root.Children)
+                    {
+                        TransformNodesToCamera(childnode, transform * root.Matrix);
+                    }
+                }
+                //TransformNodesToCamera(root, transform * root.Matrix);
             }
         }
 

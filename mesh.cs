@@ -47,16 +47,31 @@ public class Mesh
 	}
 
 	// render the mesh using the supplied shader and matrix
-	public void Render( Shader shader, Matrix4 transform, Matrix4 toWorld, Texture texture, Texture normal )
+	public void Render( Shader shader, Matrix4 transform, Matrix4 toWorld, Texture texture, Texture normal, bool skybox = false )
 	{
 		// on first run, prepare buffers
 		Prepare( shader );
 
 		// safety dance
 		GL.PushClientAttrib( ClientAttribMask.ClientVertexArrayBit );
+        
+            if(skybox)
+            {
+                // draw whitout shader for skybox:
+                int boolShader = GL.GetUniformLocation(shader.programID, "useShading");
+                GL.UseProgram(shader.programID);
+                GL.Uniform1(boolShader, 0);
+            }
+            else
+            {
+                // draw whitout shader for skybox:
+                int boolShader = GL.GetUniformLocation(shader.programID, "useShading");
+                GL.UseProgram(shader.programID);
+                GL.Uniform1(boolShader, 1);
+            }
 
-		// enable texture
-		int texLoc = GL.GetUniformLocation( shader.programID, "pixels" );
+            // enable texture
+            int texLoc = GL.GetUniformLocation( shader.programID, "pixels" );
 		GL.Uniform1( texLoc, 1 );
 		GL.ActiveTexture( TextureUnit.Texture1 );
 		GL.BindTexture( TextureTarget.Texture2D, texture.id );
@@ -68,7 +83,7 @@ public class Mesh
                 GL.UseProgram(shader.programID);
                 GL.Uniform1(boolNormal, 1);
 
-                // do not use normalmap
+                //load normalmap
             int normLoc = GL.GetUniformLocation(shader.programID, "normalmap"); //van een 2D texture locatie van variabele
             GL.Uniform1(normLoc, 0); //texture locatie 1 op de GPU.
             GL.ActiveTexture(TextureUnit.Texture0);
@@ -77,7 +92,7 @@ public class Mesh
         }
         else
         {
-            // do not use normal mape
+            // do not use normal map
             int boolNormal = GL.GetUniformLocation(shader.programID, "useNormalMap");
             GL.UseProgram(shader.programID);
             GL.Uniform1(boolNormal, 0);

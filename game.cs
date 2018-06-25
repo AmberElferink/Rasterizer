@@ -79,15 +79,17 @@ namespace Template_P3
         {
             earthNormal = new Texture("../../assets/Earth/Textures/Earth_Normal.jpg");
 
+            skyboxTexture = new Texture("../../assets/skybox1.jpg");
+            skybox = new Mesh("../../assets/skyboxH.obj");
+            skyboxnode = new Node("skybox", null, skybox, Matrix4.Identity, skyboxTexture, null, sceneGraph);
+
             // load a texture
             wood = new Texture("../../assets/wood.jpg");
             floor = new Mesh("../../assets/floor.obj");
-            floorNode = new Node("floor", null, floor, Matrix4.Identity, wood, null, sceneGraph);
+            floorNode = new Node("floor", skyboxnode, floor, Matrix4.Identity, wood, null, sceneGraph);
             // load teapot
 
-            skyboxTexture = new Texture("../../assets/skybox1.jpg");
-            skybox = new Mesh("../../assets/skyboxH.obj");
-            skyboxnode = new Node("skybox", floorNode, skybox, Matrix4.Identity, skyboxTexture, null, sceneGraph);
+
 
             sunTexture = new Texture("../../assets/Sun/2k_sun.jpg");
             sun = new Mesh("../../assets/Earth/Earth.obj");

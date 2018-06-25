@@ -25,6 +25,7 @@ namespace Template_P3
         {
             this.sceneGraph = sceneGraph;
             this.id = id;
+
             this.children = new List<Node>();
             this.parent = parent;
             this.nodeMesh = nodeObject;
