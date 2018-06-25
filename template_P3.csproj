@@ -67,6 +67,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="game.cs" />
+    <Compile Include="Light.cs" />
     <Compile Include="mesh.cs" />
     <Compile Include="meshLoader.cs" />
     <Compile Include="Node.cs" />
@@ -84,6 +85,7 @@
     <None Include="packages.config" />
     <None Include="shaders\fs.glsl" />
     <None Include="shaders\fs_post.glsl" />
+    <None Include="shaders\skybox.glsl" />
     <None Include="shaders\vs.glsl" />
     <None Include="shaders\vs_post.glsl" />
   </ItemGroup>
