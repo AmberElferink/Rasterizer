@@ -53,7 +53,7 @@ namespace Template_P3
             //set initial basic matrices
             TcamTranslation = Matrix4.CreateTranslation(0, 4, 15);
             Tcam = TcamTranslation;
-            TcamPerspective = Matrix4.CreatePerspectiveFieldOfView(1.2f, 1.3f, .1f, 1000);
+            TcamPerspective = Matrix4.CreatePerspectiveFieldOfView(1.2f, 1.3f, .1f, 2000);
 
 
             // create shaders
@@ -138,7 +138,7 @@ namespace Template_P3
             timer.Reset();
             timer.Start();
             // update rotation
-            //a += 0.001f * frameDuration;
+            a += 0.001f * frameDuration;
             if (a > 2 * PI) a -= 2 * PI;
             Tworld = Matrix4.CreateFromAxisAngle(new Vector3(0, 1, 0), a);
 
