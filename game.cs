@@ -242,20 +242,18 @@ namespace Template_P3
         {
             Light light1 = new Light(
                 new Vector3(7.0f, 5.0f, 2.0f), // position
-                new Vector3(10, 10, 8), // color
-                new Vector3(5, 5, 5)); // specular color
+                0.1f * new Vector3(10, 10, 8), // color
+                0.1f * new Vector3(5, 5, 5)); // specular color
             Matrix3 lightMat1 = new Matrix3(light1.lightPos, light1.lightColor, light1.specLightColor); // store position, color, specular color in matrix
             lightMat1 = Matrix3.Transpose(lightMat1); // now the position is the first column, color second, specular color third
             int lightMat1ID = GL.GetUniformLocation(shader.programID, "light1");
             GL.UseProgram(shader.programID);
             GL.UniformMatrix3(lightMat1ID, true, ref lightMat1);
-            // TODO: what does the bool transpose do? We now forwarded the matrix in the correct setting, so it must not be transposed again.
-            // It seems to go right (same output as before), but the bool does not make much sense. (Not too important; works)
 
             Light light2 = new Light(
                 new Vector3(-7.0f, 5.0f, 2.0f), // position
-                new Vector3(1, 1, 6), // color
-                new Vector3(0, 0, 5)); // specular color
+                0.1f * new Vector3(1, 1, 6), // color
+                0.1f * new Vector3(0, 0, 5)); // specular color
             Matrix3 lightMat2 = new Matrix3(light2.lightPos, light2.lightColor, light2.specLightColor);
             lightMat2 = Matrix3.Transpose(lightMat2);
             int lightMat2ID = GL.GetUniformLocation(shader.programID, "light2");
@@ -264,8 +262,8 @@ namespace Template_P3
 
             Light light3 = new Light(
                 new Vector3(7.0f, 5.0f, -2.0f), // position
-                100*new Vector3(7, 5, 8), // color
-                new Vector3(0, 5, 0)); // specular color
+                10 * new Vector3(7, 5, 8), // color
+                10 * new Vector3(0, 5, 0)); // specular color
             Matrix3 lightMat3 = new Matrix3(light3.lightPos, light3.lightColor, light3.specLightColor);
             lightMat3 = Matrix3.Transpose(lightMat3);
             int lightMat3ID = GL.GetUniformLocation(shader.programID, "light3");
