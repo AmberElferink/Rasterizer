@@ -51,7 +51,7 @@ namespace Template_P3
             timer.Start();
 
             //set initial basic matrices
-            TcamTranslation = Matrix4.CreateTranslation(0, 4, 15);
+            TcamTranslation = Matrix4.CreateRotationY(PI/2)* Matrix4.CreateTranslation(30, 4, 0);
             Tcam = TcamTranslation;
             TcamPerspective = Matrix4.CreatePerspectiveFieldOfView(1.2f, 1.3f, .1f, 2000);
 
