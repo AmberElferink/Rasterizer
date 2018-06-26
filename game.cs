@@ -263,7 +263,7 @@ namespace Template_P3
             Light light3 = new Light(
                 new Vector3(7.0f, 5.0f, -2.0f), // position
                 10 * new Vector3(7, 5, 8), // color
-                10 * new Vector3(0, 5, 0)); // specular color
+                new Vector3(0, 5, 0)); // specular color
             Matrix3 lightMat3 = new Matrix3(light3.lightPos, light3.lightColor, light3.specLightColor);
             lightMat3 = Matrix3.Transpose(lightMat3);
             int lightMat3ID = GL.GetUniformLocation(shader.programID, "light3");
