@@ -151,12 +151,12 @@ namespace Template_P3
                Matrix4.CreateScale(0.25f, 0.25f, 0.25f); //size relative to earth
 
 
-            earthorbit = Rotate(earthorbit, 0.001f, frameDuration);
-            earthrotation = Rotate(earthrotation, 0.002f, frameDuration);
+            earthorbit = Rotate(earthorbit, 0.0001f, frameDuration);
+            earthrotation = Rotate(earthrotation, 0.001f, frameDuration);
 
-            earthNode.Matrix = Matrix4.CreateRotationY(moonrotation) * //rotation around its center
+            earthNode.Matrix = Matrix4.CreateRotationY(earthrotation) * //rotation around its center
                 Matrix4.CreateTranslation(130, 0, 0) * //distance from moon center to the earth center
-                Matrix4.CreateRotationY(moonorbit); //rotation around the earth
+                Matrix4.CreateRotationY(earthorbit); //rotation around the earth
         }
 
 
