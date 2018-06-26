@@ -70,13 +70,13 @@ namespace Template_P3
 
             // set the lights (positions, colors)
             lightMat1ID = GL.GetUniformLocation(shader.programID, "light1");
-            GL.UniformMatrix3(lightMat1ID, true, ref lightMat1);
+            //GL.UniformMatrix3(lightMat1ID, true, ref lightMat1);
             lightMat2ID = GL.GetUniformLocation(shader.programID, "light2");
-            GL.UniformMatrix3(lightMat2ID, true, ref lightMat2);
+            //GL.UniformMatrix3(lightMat2ID, true, ref lightMat2);
             lightMat3ID = GL.GetUniformLocation(shader.programID, "light3");
-            GL.UniformMatrix3(lightMat3ID, true, ref lightMat3);
+            //GL.UniformMatrix3(lightMat3ID, true, ref lightMat3);
             lightMat4ID = GL.GetUniformLocation(shader.programID, "light4");
-            GL.UniformMatrix3(lightMat4ID, true, ref lightMat4);
+            //GL.UniformMatrix3(lightMat4ID, true, ref lightMat4);
             passLights();
 
 
@@ -135,12 +135,12 @@ namespace Template_P3
             timer.Start();
 
             // update light colors
-            if (c > 2000) cIncrease = false;
+            /*if (c > 2000) cIncrease = false;
             if (c < 10) cIncrease = true;
             if (cIncrease) c += 5;
             else c -= 5;
             Console.WriteLine(c);
-            passLights();
+            passLights();*/
             /*GL.UniformMatrix3(lightMat1ID, true, ref lightMat1);
             GL.UniformMatrix3(lightMat2ID, true, ref lightMat2);
             GL.UniformMatrix3(lightMat3ID, true, ref lightMat3);
